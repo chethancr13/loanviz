@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, BadgeDollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +45,10 @@ export const Navbar = () => {
             <NavLink href="/#calculator">Calculator</NavLink>
             <NavLink href="/#comparison">Comparison</NavLink>
             <NavLink href="/#about">About</NavLink>
+            <NavLink href="/subscription" className="flex items-center">
+              <BadgeDollarSign className="mr-1 h-4 w-4" />
+              Subscription
+            </NavLink>
             <Button variant="default" className="ml-2 font-medium">
               Get Started
             </Button>
@@ -97,6 +101,14 @@ export const Navbar = () => {
           >
             About
           </MobileNavLink>
+          <MobileNavLink 
+            href="/subscription" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center justify-center"
+          >
+            <BadgeDollarSign className="mr-1 h-4 w-4" />
+            Subscription
+          </MobileNavLink>
           <Button 
             variant="default" 
             className="w-full mt-4"
@@ -110,11 +122,11 @@ export const Navbar = () => {
   );
 };
 
-const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
+const NavLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) => {
   return (
     <Link
       to={href}
-      className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200"
+      className={cn("text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200", className)}
     >
       {children}
     </Link>
@@ -124,16 +136,18 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 const MobileNavLink = ({ 
   href, 
   onClick, 
-  children 
+  children,
+  className
 }: { 
   href: string; 
   onClick: () => void;
-  children: React.ReactNode 
+  children: React.ReactNode;
+  className?: string;
 }) => {
   return (
     <Link
       to={href}
-      className="text-xl font-medium text-gray-800 dark:text-gray-200 w-full text-center py-3"
+      className={cn("text-xl font-medium text-gray-800 dark:text-gray-200 w-full text-center py-3", className)}
       onClick={onClick}
     >
       {children}
