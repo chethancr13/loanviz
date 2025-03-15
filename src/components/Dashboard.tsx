@@ -1,11 +1,12 @@
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatCurrency, calculateLoanSummary, LoanParams } from '@/utils/loanCalculations';
 import { LineChart, BarChart, AreaChart } from '@/components/charts/LineChart';
 import { PieChart } from '@/components/charts/PieChart';
 import { Calculator, Wallet, TrendingUp, PieChart as PieChartIcon } from 'lucide-react';
+import LoanCalculator from './LoanCalculator';
+import LoanComparison from './LoanComparison';
 
 const demoLoanData: LoanParams = {
   loanAmount: 300000,
@@ -77,7 +78,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 space-y-8 animate-fade-in">
+    <div className="w-full max-w-7xl mx-auto px-4 space-y-12 py-8 animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <SummaryCard
           title="Monthly Payment"
@@ -282,6 +283,58 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Calculator Section */}
+      <section id="calculator" className="pt-8 pb-12">
+        <h2 className="text-3xl font-display font-semibold mb-6">Loan Calculator</h2>
+        <LoanCalculator />
+      </section>
+
+      {/* Comparison Section */}
+      <section id="comparison" className="pt-8 pb-12">
+        <h2 className="text-3xl font-display font-semibold mb-6">Loan Comparison</h2>
+        <LoanComparison />
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="pt-8 pb-16">
+        <h2 className="text-3xl font-display font-semibold mb-6">About LoanViz</h2>
+        <Card className="glassmorphism">
+          <CardContent className="pt-6">
+            <div className="prose max-w-none">
+              <p className="text-lg">
+                LoanViz is a comprehensive loan calculator and visualization tool designed to help you make informed financial decisions. 
+                Our interactive tools allow you to explore different loan scenarios, understand the impact of interest rates, 
+                and visualize your payment structure over time.
+              </p>
+              
+              <h3 className="text-xl font-medium mt-6 mb-3">Our Features</h3>
+              <ul className="space-y-2 list-disc pl-5">
+                <li>Interactive loan calculators with adjustable parameters</li>
+                <li>Visual representations of payment breakdowns</li>
+                <li>Comparative analysis of different loan options</li>
+                <li>Detailed amortization schedules</li>
+                <li>Responsive design accessible on any device</li>
+              </ul>
+              
+              <h3 className="text-xl font-medium mt-6 mb-3">How to Use</h3>
+              <p>
+                Adjust the sliders in our calculator to set your loan amount, interest rate, term, and other parameters.
+                The calculations update in real-time, allowing you to immediately see the impact of your changes. 
+                Use the comparison tool to evaluate different scenarios side by side.
+              </p>
+              
+              <div className="mt-6 bg-primary/5 p-4 rounded-lg">
+                <h4 className="font-medium mb-2">Disclaimer</h4>
+                <p className="text-sm text-muted-foreground">
+                  The calculations provided by LoanViz are estimates and should be used for informational purposes only. 
+                  Actual loan terms and conditions may vary. Please consult with a financial advisor or lender for personalized advice.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };

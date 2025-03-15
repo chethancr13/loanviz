@@ -24,6 +24,14 @@ export const Navbar = () => {
     };
   }, []);
 
+  const scrollToSection = (sectionId: string) => {
+    setIsMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header 
       className={cn(
@@ -41,10 +49,10 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <NavLink href="/">Dashboard</NavLink>
-            <NavLink href="/#calculator">Calculator</NavLink>
-            <NavLink href="/#comparison">Comparison</NavLink>
-            <NavLink href="/#about">About</NavLink>
+            <SmoothNavLink onClick={() => scrollToSection('')}>Dashboard</SmoothNavLink>
+            <SmoothNavLink onClick={() => scrollToSection('calculator')}>Calculator</SmoothNavLink>
+            <SmoothNavLink onClick={() => scrollToSection('comparison')}>Comparison</SmoothNavLink>
+            <SmoothNavLink onClick={() => scrollToSection('about')}>About</SmoothNavLink>
             <NavLink href="/subscription" className="flex items-center">
               <BadgeDollarSign className="mr-1 h-4 w-4" />
               Subscription
@@ -77,30 +85,26 @@ export const Navbar = () => {
         )}
       >
         <nav className="flex flex-col space-y-6 items-center">
-          <MobileNavLink 
-            href="/" 
-            onClick={() => setIsMobileMenuOpen(false)}
+          <MobileSmoothNavLink 
+            onClick={() => scrollToSection('')}
           >
             Dashboard
-          </MobileNavLink>
-          <MobileNavLink 
-            href="/#calculator" 
-            onClick={() => setIsMobileMenuOpen(false)}
+          </MobileSmoothNavLink>
+          <MobileSmoothNavLink 
+            onClick={() => scrollToSection('calculator')}
           >
             Calculator
-          </MobileNavLink>
-          <MobileNavLink 
-            href="/#comparison" 
-            onClick={() => setIsMobileMenuOpen(false)}
+          </MobileSmoothNavLink>
+          <MobileSmoothNavLink 
+            onClick={() => scrollToSection('comparison')}
           >
             Comparison
-          </MobileNavLink>
-          <MobileNavLink 
-            href="/#about" 
-            onClick={() => setIsMobileMenuOpen(false)}
+          </MobileSmoothNavLink>
+          <MobileSmoothNavLink 
+            onClick={() => scrollToSection('about')}
           >
             About
-          </MobileNavLink>
+          </MobileSmoothNavLink>
           <MobileNavLink 
             href="/subscription" 
             onClick={() => setIsMobileMenuOpen(false)}
@@ -133,6 +137,25 @@ const NavLink = ({ href, children, className }: { href: string; children: React.
   );
 };
 
+const SmoothNavLink = ({ 
+  onClick, 
+  children,
+  className
+}: { 
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn("text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary font-medium transition-colors duration-200 bg-transparent", className)}
+    >
+      {children}
+    </button>
+  );
+};
+
 const MobileNavLink = ({ 
   href, 
   onClick, 
@@ -152,6 +175,25 @@ const MobileNavLink = ({
     >
       {children}
     </Link>
+  );
+};
+
+const MobileSmoothNavLink = ({ 
+  onClick, 
+  children,
+  className
+}: { 
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn("text-xl font-medium text-gray-800 dark:text-gray-200 w-full text-center py-3", className)}
+    >
+      {children}
+    </button>
   );
 };
 

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { calculateLoanSummary, formatCurrency, LoanParams } from '@/utils/loanCalculations';
 import { Slider } from '@/components/ui/slider';
+import { toast } from "@/components/ui/use-toast";
 
 const LoanCalculator = () => {
   const [loanParams, setLoanParams] = useState<LoanParams>({
@@ -19,6 +20,7 @@ const LoanCalculator = () => {
   const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
   const [totalInterest, setTotalInterest] = useState<number>(0);
   const [totalCost, setTotalCost] = useState<number>(0);
+  const [savedCalculations, setSavedCalculations] = useState<Array<{name: string, params: LoanParams}>>([]);
 
   useEffect(() => {
     const summary = calculateLoanSummary(loanParams);
@@ -26,6 +28,14 @@ const LoanCalculator = () => {
     setTotalInterest(summary.totalInterest);
     setTotalCost(summary.totalCost);
   }, [loanParams]);
+
+  useEffect(() => {
+    // Load saved calculations from localStorage
+    const saved = localStorage.getItem('savedCalculations');
+    if (saved) {
+      setSavedCalculations(JSON.parse(saved));
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,6 +50,32 @@ const LoanCalculator = () => {
       ...prev,
       [name]: value[0]
     }));
+  };
+
+  const saveCalculation = () => {
+    // Ask for a name for this calculation
+    const calculationName = prompt("Enter a name for this calculation:");
+    if (calculationName) {
+      const newCalculation = { name: calculationName, params: loanParams };
+      const updatedSavedCalculations = [...savedCalculations, newCalculation];
+      setSavedCalculations(updatedSavedCalculations);
+      localStorage.setItem('savedCalculations', JSON.stringify(updatedSavedCalculations));
+      
+      toast({
+        title: "Calculation saved",
+        description: `Your "${calculationName}" calculation has been saved.`,
+      });
+    }
+  };
+
+  const loadCalculation = (index: number) => {
+    const calculationToLoad = savedCalculations[index];
+    setLoanParams(calculationToLoad.params);
+    
+    toast({
+      title: "Calculation loaded",
+      description: `Loaded "${calculationToLoad.name}" calculation.`,
+    });
   };
 
   return (
@@ -200,9 +236,29 @@ const LoanCalculator = () => {
             </div>
           </div>
           
-          <Button className="w-full mt-4">
-            View Full Amortization Schedule
-          </Button>
+          <div className="space-y-3">
+            <Button className="w-full" onClick={saveCalculation}>
+              Save Calculation
+            </Button>
+            
+            {savedCalculations.length > 0 && (
+              <div className="mt-4">
+                <h4 className="text-sm font-medium mb-2">Saved Calculations</h4>
+                <div className="space-y-2 max-h-36 overflow-y-auto pr-2">
+                  {savedCalculations.map((calc, index) => (
+                    <Button 
+                      key={index} 
+                      variant="outline" 
+                      className="w-full justify-start text-left"
+                      onClick={() => loadCalculation(index)}
+                    >
+                      {calc.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
